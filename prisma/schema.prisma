@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  passwordHash  String
+  passwordPlain String
+  role          String   @default("user")
+  createdAt     DateTime @default(now())
+
+  keys PgpKey[]
+  logs ActivityLog[]
+}
+
+model PgpKey {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  email       String?
+  publicKey   String
+  privateKey  String?
+  passphrase  String?
+  fingerprint String
+  keyId       String
+  algorithm   String?
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([fingerprint])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
