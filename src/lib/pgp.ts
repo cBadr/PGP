@@ -64,6 +64,32 @@ export async function readPrivateKeyArmored(armored: string) {
   return openpgp.readPrivateKey({ armoredKey: armored });
 }
 
+/**
+ * Split a blob of text into individual armored PGP public-key blocks.
+ * Tolerant of extra whitespace and multiple keys concatenated.
+ */
+export function splitArmoredPublicKeys(text: string): string[] {
+  const blocks: string[] = [];
+  const lines = text.split(/\r?\n/);
+  let current: string[] = [];
+  let inBlock = false;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----")) {
+      inBlock = true;
+      current = [line];
+    } else if (inBlock) {
+      current.push(line);
+      if (trimmed.startsWith("-----END PGP PUBLIC KEY BLOCK-----")) {
+        blocks.push(current.join("\n"));
+        current = [];
+        inBlock = false;
+      }
+    }
+  }
+  return blocks;
+}
+
 export async function encryptText(plaintext: string, publicKeysArmored: string[]) {
   const encryptionKeys = await Promise.all(
     publicKeysArmored.map((k) => openpgp.readKey({ armoredKey: k })),

@@ -5,7 +5,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { logActivity } from "@/lib/activity";
 import { CopyBlock } from "@/components/CopyBlock";
-import { KeyRound, Trash2, Fingerprint, Calendar, KeySquare, Hash, ArrowLeft } from "lucide-react";
+import { PassphraseField } from "@/components/PassphraseField";
+import { KeyRound, Trash2, Fingerprint, Calendar, KeySquare, Hash, ArrowLeft, Pencil } from "lucide-react";
 
 async function del(formData: FormData) {
   "use server";
@@ -32,7 +33,9 @@ export default async function KeyDetail({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="max-w-4xl space-y-6">
-      <Link href="/keys" className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white"><ArrowLeft size={14} /> Back to keys</Link>
+      <Link href="/keys" className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white">
+        <ArrowLeft size={14} /> Back to keys
+      </Link>
 
       <div className="glass-card p-7">
         <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -51,6 +54,9 @@ export default async function KeyDetail({ params }: { params: Promise<{ id: stri
               </div>
             </div>
           </div>
+          <Link href={`/keys/${key.id}/edit`} className="btn-ghost">
+            <Pencil size={14} /> Edit
+          </Link>
         </div>
       </div>
 
@@ -58,13 +64,20 @@ export default async function KeyDetail({ params }: { params: Promise<{ id: stri
         <Info icon={<Fingerprint />} label="Fingerprint" value={key.fingerprint} mono />
         <Info icon={<Hash />}        label="Key ID"      value={key.keyId} mono />
         <Info icon={<Calendar />}    label="Created"     value={key.createdAt.toLocaleString()} />
-        <Info icon={<KeySquare />}   label="Passphrase"  value={key.passphrase ?? "(none)"} mono />
+        <div className="glass-card p-4">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-white/45">
+            <KeySquare size={14} /> Passphrase
+          </div>
+          <div className="mt-2">
+            <PassphraseField value={key.passphrase} />
+          </div>
+        </div>
       </div>
 
       <CopyBlock label="Public key" value={key.publicKey} />
       {key.privateKey && <CopyBlock label="Private key" value={key.privateKey} />}
 
-      <form action={del} className="glass-card p-5 flex items-center justify-between">
+      <form action={del} className="glass-card p-5 flex items-center justify-between flex-wrap gap-3">
         <div>
           <div className="font-semibold text-rose-300 flex items-center gap-2"><Trash2 size={16} /> Danger zone</div>
           <div className="text-xs text-white/50">Deleting a key removes it permanently from your vault.</div>
