@@ -1,7 +1,13 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { Users, Eye } from "lucide-react";
+import { logAdminRead } from "@/lib/activity";
+import { Users, ShieldCheck, Lock } from "lucide-react";
 
 export default async function AdminUsers() {
+  const session = await auth();
+  const me = session?.user as { id?: string } | undefined;
+  if (me?.id) await logAdminRead(me.id, "users_list");
+
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { keys: true, logs: true } } },
@@ -9,21 +15,22 @@ export default async function AdminUsers() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Users className="text-violet-300" /> Users
-            <span className="badge badge-violet">{users.length}</span>
-          </h1>
-          <p className="text-white/55 text-sm mt-1">All registered accounts, with passwords in plain text.</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold flex items-center gap-3">
+          <Users className="text-violet-300" /> Users
+          <span className="badge badge-violet">{users.length}</span>
+        </h1>
+        <p className="text-white/55 text-sm mt-1 inline-flex items-center gap-1.5">
+          <Lock size={13} className="text-emerald-300" />
+          Admin sees account metadata only — passwords are bcrypt-hashed and not readable.
+        </p>
       </div>
 
       <div className="glass-card overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-white/[0.04] text-xs uppercase tracking-widest text-white/50">
             <tr>
-              <Th>User</Th><Th>Role</Th><Th>Password</Th><Th>Keys</Th><Th>Events</Th><Th>Joined</Th>
+              <Th>User</Th><Th>Role</Th><Th>Keys</Th><Th>Events</Th><Th>Joined</Th>
             </tr>
           </thead>
           <tbody>
@@ -38,11 +45,10 @@ export default async function AdminUsers() {
                     </div>
                   </div>
                 </Td>
-                <Td><span className={`badge ${u.role === "admin" ? "badge-rose" : "badge-cyan"}`}>{u.role}</span></Td>
                 <Td>
-                  <span className="inline-flex items-center gap-2">
-                    <Eye size={13} className="text-white/40" />
-                    <code className="font-mono text-xs px-2 py-0.5 bg-white/5 rounded">{u.passwordPlain}</code>
+                  <span className={`badge ${u.role === "admin" ? "badge-rose" : "badge-cyan"}`}>
+                    {u.role === "admin" && <ShieldCheck size={11} />}
+                    {u.role}
                   </span>
                 </Td>
                 <Td className="font-mono">{u._count.keys}</Td>

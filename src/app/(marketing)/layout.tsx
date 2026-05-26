@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { Logo } from "@/components/Logo";
-import { AlertTriangle } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -10,15 +10,18 @@ export default async function MarketingLayout({ children }: { children: React.Re
   return (
     <>
       <header className="sticky top-0 z-30 glass border-b border-white/5">
-        <nav className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <Logo subtitle="Educational SaaS" />
+        <nav className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+          <Logo subtitle="OpenPGP Toolkit" />
+
+          <div className="hidden md:flex items-center gap-1 text-sm">
+            <Link href="/faq" className="nav-link">FAQ</Link>
+          </div>
+
           <div className="flex items-center gap-2 text-sm">
             {user ? (
-              <>
-                <Link href={user.role === "admin" ? "/admin" : "/dashboard"} className="btn-ghost">
-                  {user.role === "admin" ? "Admin Panel" : "Open Dashboard"}
-                </Link>
-              </>
+              <Link href={user.role === "admin" ? "/admin" : "/dashboard"} className="btn-ghost">
+                {user.role === "admin" ? "Admin Panel" : "Open Dashboard"}
+              </Link>
             ) : (
               <>
                 <Link href="/login" className="btn-ghost">Login</Link>
@@ -29,11 +32,19 @@ export default async function MarketingLayout({ children }: { children: React.Re
         </nav>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-white/5 py-6 text-center text-xs text-white/40">
-        <span className="inline-flex items-center gap-1.5">
-          <AlertTriangle size={12} className="text-amber-400/80" />
-          Training build — all data stored as plain text. Do not use real keys.
-        </span>
+      <footer className="border-t border-white/5 py-8">
+        <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-xs text-white/45">
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck size={12} className="text-emerald-400/80" />
+            Built with OpenPGP.js · client-side cryptography
+          </span>
+          <span className="flex items-center gap-4">
+            <Link href="/faq" className="hover:text-white">FAQ</Link>
+            <Link href="/login" className="hover:text-white">Login</Link>
+            <Link href="/register" className="hover:text-white">Register</Link>
+            <a href="https://t.me/2idlexaz" target="_blank" rel="noreferrer" className="hover:text-white">Contact</a>
+          </span>
+        </div>
       </footer>
     </>
   );

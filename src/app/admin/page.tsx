@@ -1,15 +1,27 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { Users, KeyRound, Activity, ShieldAlert, ArrowRight, Lock, Unlock, PenLine, CheckCircle2 } from "lucide-react";
+import { logAdminRead } from "@/lib/activity";
+import { Users, KeyRound, Activity, Lock, Unlock, PenLine, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default async function AdminOverview() {
+  const session = await auth();
+  const me = session?.user as { id?: string } | undefined;
+  if (me?.id) await logAdminRead(me.id, "overview");
+
   const [userCount, keyCount, logCount, opCounts, recentUsers, recentLogs] = await Promise.all([
     prisma.user.count(),
     prisma.pgpKey.count(),
     prisma.activityLog.count(),
     prisma.activityLog.groupBy({ by: ["action"], _count: true }),
-    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
-    prisma.activityLog.findMany({ orderBy: { createdAt: "desc" }, take: 8, include: { user: true } }),
+    prisma.user.findMany({
+      orderBy: { createdAt: "desc" }, take: 5,
+      select: { id: true, email: true, name: true, role: true },
+    }),
+    prisma.activityLog.findMany({
+      orderBy: { createdAt: "desc" }, take: 8,
+      select: { id: true, action: true, details: true, createdAt: true, user: { select: { email: true } } },
+    }),
   ]);
 
   const c = (a: string) => opCounts.find((x) => x.action === a)?._count ?? 0;
@@ -21,7 +33,7 @@ export default async function AdminOverview() {
           <h1 className="text-3xl font-bold">Overview</h1>
           <p className="text-white/55 text-sm mt-1">Snapshot of every user, key and event in the system.</p>
         </div>
-        <span className="badge badge-rose"><ShieldAlert size={12} /> Plain-text training mode</span>
+        <span className="badge badge-emerald"><ShieldCheck size={12} /> Privacy-respecting: secrets stay with their owner</span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

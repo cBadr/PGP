@@ -1,13 +1,51 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { Vault3D } from "@/components/Vault3D";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { site } from "@/lib/site";
 import { KeyRound, Lock, PenLine, ShieldCheck, Sparkles, GitFork, Zap, Eye, Server, Globe, Repeat } from "lucide-react";
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: site.name,
+  url: site.url,
+  description: site.description,
+  applicationCategory: "SecurityApplication",
+  operatingSystem: "Web Browser",
+  browserRequirements: "Requires JavaScript and modern browser with WebCrypto.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  featureList: [
+    "Generate RSA and ECC PGP keys",
+    "Import existing PGP keys",
+    "Encrypt and decrypt messages",
+    "Sign and verify messages",
+    "Manage multiple keys per account",
+    "Client-side cryptography",
+  ],
+  author: {
+    "@type": "Person",
+    name: site.author.name,
+    sameAs: [site.author.github, site.author.telegram],
+  },
+  inLanguage: "en",
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  url: site.url,
+  logo: `${site.url}/icon`,
+  sameAs: [site.author.github, site.author.telegram],
+};
 
 export default async function Landing() {
   const session = await auth();
 
   return (
     <div>
+      <JsonLd data={[webAppSchema, orgSchema]} />
       {/* ───── HERO ───── */}
       <section className="relative max-w-7xl mx-auto px-6 pt-12 pb-24 grid lg:grid-cols-2 gap-10 items-center min-h-[78vh]">
         <div className="space-y-7 relative z-10">

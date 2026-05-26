@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
-import { LayoutDashboard, KeyRound, Lock, Unlock, PenLine, CheckCircle2, LogOut, ShieldCheck, AlertTriangle } from "lucide-react";
+import { LayoutDashboard, KeyRound, Lock, Unlock, PenLine, CheckCircle2, LogOut, ShieldCheck } from "lucide-react";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -58,8 +58,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
       <footer className="border-t border-white/5 py-4 text-center text-xs text-white/40">
         <span className="inline-flex items-center gap-1.5">
-          <AlertTriangle size={12} className="text-amber-400/80" />
-          Training build — keys &amp; passphrases stored as plain text.
+          <ShieldCheck size={12} className="text-emerald-400/80" />
+          OpenPGP toolkit · admin cannot read your secrets
         </span>
       </footer>
     </>

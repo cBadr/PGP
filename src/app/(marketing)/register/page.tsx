@@ -22,7 +22,7 @@ async function register(formData: FormData) {
   const role = userCount === 0 ? "admin" : "user";
 
   await prisma.user.create({
-    data: { email, name, passwordHash, passwordPlain: password, role },
+    data: { email, name, passwordHash, role },
   });
   await signIn("credentials", { email, password, redirectTo: "/dashboard" });
 }
@@ -56,7 +56,7 @@ export default async function RegisterPage() {
           <button className="btn-primary w-full mt-2">Create account →</button>
           <p className="text-[11px] text-white/45 text-center inline-flex items-center justify-center gap-1.5 w-full">
             <AlertTriangle size={11} className="text-amber-400/80" />
-            First user becomes admin · password stored plain for training
+            First registered user becomes admin
           </p>
         </form>
 
