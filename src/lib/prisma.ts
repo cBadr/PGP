@@ -13,11 +13,18 @@ function createClient(): PrismaClient {
   }
 
   // PrismaPg uses node-postgres under the hood. Pool tuning goes in the
-  // pg config (first arg). Keep the pool tiny — Vercel serverless functions
-  // spin up new processes constantly.
+  // pg config (first arg).
+  //
+  // IMPORTANT: DATABASE_URL must point at Supabase's TRANSACTION pooler
+  // (port 6543), not the session pooler (5432). Transaction mode can serve
+  // thousands of short-lived Vercel serverless invocations; session mode
+  // caps at 15 and breaks under any real traffic.
+  //
+  // Per Vercel function we keep a tiny pool — serverless functions are
+  // short-lived processes, so a large pool is wasted.
   const adapter = new PrismaPg({
     connectionString: url,
-    max: 5,
+    max: 3,
     idleTimeoutMillis: 10_000,
     connectionTimeoutMillis: 5_000,
   });
