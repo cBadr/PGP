@@ -11,11 +11,18 @@ import type { NextConfig } from "next";
  */
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval'",
+  // 'unsafe-inline' and 'unsafe-eval' are required by Next.js' RSC payload
+  // bootstrap. wasm-unsafe-eval is required by OpenPGP.js. *.vercel-scripts.com
+  // hosts Vercel Analytics; *.vercel.live hosts the preview toolbar.
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://*.vercel-scripts.com https://*.vercel.live https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://img.shields.io",
+  "img-src 'self' data: blob: https://img.shields.io https://*.vercel.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://keys.openpgp.org https://vercel.live",
+  // RSC fetches its payload via 'self'. keys.openpgp.org is the keyserver
+  // we'll integrate with. *.vercel.live is the preview toolbar's API.
+  "connect-src 'self' https://keys.openpgp.org https://*.vercel.live https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+  "frame-src 'self' https://*.vercel.live",
+  "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
