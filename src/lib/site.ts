@@ -19,10 +19,10 @@ export const site = {
   ],
   author: {
     name: "PGP·Vault",
-    telegram: "https://t.me/2idlexaz",
+    telegram: "https://t.me/Idlexaz",
     github: "https://github.com/cBadr/PGP",
   },
-  twitterHandle: "@2idlexaz",
+  twitterHandle: "@Idlexaz",
   themeColor: "#0a0118",
   ogImage: "/opengraph-image",
 } as const;

@@ -101,7 +101,7 @@ export default function FAQPage() {
         </h1>
         <p className="text-white/60 mt-4 max-w-2xl mx-auto">
           Twelve questions that cover most of what you need to start using PGP confidently.
-          If something's missing, <Link href="https://t.me/2idlexaz" className="text-violet-300 hover:text-violet-200">message me on Telegram</Link>.
+          If something's missing, <Link href="https://t.me/Idlexaz" className="text-violet-300 hover:text-violet-200">message me on Telegram</Link>.
         </p>
       </header>
 

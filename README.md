@@ -18,8 +18,8 @@ Generate keys · encrypt · decrypt · sign · verify — in a clean console whe
   <img src="https://img.shields.io/badge/%E2%96%B6%20LAUNCH%20APP-pgp--swart.vercel.app-8b5cf6?style=for-the-badge&logoColor=white&labelColor=4c1d95" alt="Launch app" />
 </a>
 &nbsp;
-<a href="https://t.me/2idlexaz">
-  <img src="https://img.shields.io/badge/Contact%20the%20dev-%402idlexaz-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
+<a href="https://t.me/Idlexaz">
+  <img src="https://img.shields.io/badge/Contact%20the%20dev-%40Idlexaz-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
 </a>
 
 <br /><br />
@@ -393,7 +393,7 @@ src/
 
 ## 🤝 Contributing
 
-Issues, pull requests, and feature ideas are welcome — open an issue, send a PR, or [message me directly](https://t.me/2idlexaz).
+Issues, pull requests, and feature ideas are welcome — open an issue, send a PR, or [message me directly](https://t.me/Idlexaz).
 
 ```bash
 # fork → clone → branch → commit → push → PR
@@ -416,8 +416,8 @@ Before opening a PR, please:
 
 Questions, bug reports, feature ideas, or partnerships — say hi 👋
 
-<a href="https://t.me/2idlexaz">
-  <img src="https://img.shields.io/badge/Telegram-%402idlexaz-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram @2idlexaz" />
+<a href="https://t.me/Idlexaz">
+  <img src="https://img.shields.io/badge/Telegram-%40Idlexaz-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram @Idlexaz" />
 </a>
 <br /><br />
 
@@ -439,6 +439,6 @@ Questions, bug reports, feature ideas, or partnerships — say hi 👋
 
 <br />
 
-<a href="https://pgp-swart.vercel.app/">🔗 pgp-swart.vercel.app</a> · <a href="https://t.me/2idlexaz">💬 @2idlexaz</a>
+<a href="https://pgp-swart.vercel.app/">🔗 pgp-swart.vercel.app</a> · <a href="https://t.me/Idlexaz">💬 @Idlexaz</a>
 
 </div>

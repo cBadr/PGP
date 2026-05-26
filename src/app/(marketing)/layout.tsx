@@ -42,7 +42,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
             <Link href="/faq" className="hover:text-white">FAQ</Link>
             <Link href="/login" className="hover:text-white">Login</Link>
             <Link href="/register" className="hover:text-white">Register</Link>
-            <a href="https://t.me/2idlexaz" target="_blank" rel="noreferrer" className="hover:text-white">Contact</a>
+            <a href="https://t.me/Idlexaz" target="_blank" rel="noreferrer" className="hover:text-white">Contact</a>
           </span>
         </div>
       </footer>
