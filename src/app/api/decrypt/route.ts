@@ -17,7 +17,10 @@ export async function POST(req: Request) {
   if (!key || !key.privateKey) return NextResponse.json({ error: "Private key not found" }, { status: 404 });
 
   try {
-    const plaintext = await decryptText(ciphertext, key.privateKey, passphrase ?? key.passphrase ?? "");
+    // Empty string from the form should fall back to the stored passphrase, so
+    // use `||` (not `??`) — `??` only falls back on null/undefined.
+    const effectivePass = (passphrase && String(passphrase)) || key.passphrase || "";
+    const plaintext = await decryptText(ciphertext, key.privateKey, effectivePass);
     await logActivity(user.id, "decrypt", `server-side · ${key.fingerprint.slice(-16)}`);
     return NextResponse.json({ result: plaintext });
   } catch (e) {

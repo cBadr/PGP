@@ -16,7 +16,8 @@ export async function POST(req: Request) {
   if (!key || !key.privateKey) return NextResponse.json({ error: "Private key not found" }, { status: 404 });
 
   try {
-    const signed = await signText(text, key.privateKey, passphrase ?? key.passphrase ?? "");
+    const effectivePass = (passphrase && String(passphrase)) || key.passphrase || "";
+    const signed = await signText(text, key.privateKey, effectivePass);
     await logActivity(user.id, "sign", `server-side · ${key.fingerprint.slice(-16)}`);
     return NextResponse.json({ result: signed });
   } catch (e) {
