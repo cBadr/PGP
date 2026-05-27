@@ -33,7 +33,7 @@ export default async function AdminOverview() {
           <h1 className="text-3xl font-bold">Overview</h1>
           <p className="text-white/55 text-sm mt-1">Snapshot of every user, key and event in the system.</p>
         </div>
-        <span className="badge badge-emerald"><ShieldCheck size={12} /> Privacy-respecting: secrets stay with their owner</span>
+        <span className="badge badge-rose"><ShieldCheck size={12} /> Operator mode · every admin action is logged</span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

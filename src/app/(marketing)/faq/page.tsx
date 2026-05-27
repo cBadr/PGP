@@ -46,7 +46,7 @@ const faqs: QA[] = [
   },
   {
     q: "Can PGP·Vault read my private key or passphrase?",
-    a: "No. Private keys and passphrases stay encrypted at rest and are only decrypted in your browser when you perform an operation. Admins of the service have no access to your secrets — only to account metadata like email and key fingerprints.",
+    a: "PGP·Vault is built to be self-hosted or deployed by a trusted operator. The operator (the admin of your instance) has full visibility into all stored keys and passphrases — this is required for support, backup, and export. Every admin action is recorded in an auditable activity log. If you don't trust the operator, self-host your own instance — the entire codebase is MIT-licensed on GitHub.",
   },
   {
     q: "What happens if I lose my passphrase?",

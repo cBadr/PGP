@@ -22,7 +22,7 @@ export default async function AdminUsers() {
         </h1>
         <p className="text-white/55 text-sm mt-1 inline-flex items-center gap-1.5">
           <Lock size={13} className="text-emerald-300" />
-          Admin sees account metadata only — passwords are bcrypt-hashed and not readable.
+          Passwords are bcrypt-hashed and never recoverable — only metadata is shown below.
         </p>
       </div>
 

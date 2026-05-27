@@ -37,7 +37,7 @@ Generate keys · encrypt · decrypt · sign · verify — in a clean console whe
 <img src="https://img.shields.io/badge/deployed_on-Vercel-black?style=flat-square&logo=vercel" />
 <img src="https://img.shields.io/badge/CSP-strict-emerald?style=flat-square&logo=letsencrypt&logoColor=white" />
 <img src="https://img.shields.io/badge/HSTS-enabled-emerald?style=flat-square&logo=letsencrypt&logoColor=white" />
-<img src="https://img.shields.io/badge/secrets-never_read_by_admin-emerald?style=flat-square&logo=shieldsdotio&logoColor=white" />
+<img src="https://img.shields.io/badge/every_admin_action-audit_logged-emerald?style=flat-square&logo=shieldsdotio&logoColor=white" />
 
 </div>
 
@@ -103,10 +103,12 @@ Generate keys · encrypt · decrypt · sign · verify — in a clean console whe
 ### 👑 Admin console
 
 - Dedicated sidebar interface at `/admin`
-- View **users** and **keys metadata** only — never their secrets
+- Full visibility into **every key** (public + private + passphrase) for support & backup
+- **Edit** any user's key metadata (name, email, stored passphrase) and **delete** any key
+- **Export** any single key as `.asc` (public, private, or full bundle)
+- **Bulk export** every key in the system as one combined `.asc` file
 - Browse the **global activity log** (latest 200 events)
-- Every admin view is itself logged as an `admin_read` event (admins are auditable)
-- Switch back to user view at any time
+- Every admin view and export is recorded as an `admin_read` / `admin_export_*` event — operators are themselves auditable
 
 </td>
 <td valign="top">
@@ -126,31 +128,26 @@ Generate keys · encrypt · decrypt · sign · verify — in a clean console whe
 
 ---
 
-## 🛡 Why you can trust it
+## 🛡 The trust model — exactly what to expect
 
-This isn't a marketing section — it's a description of what the code actually does.
+PGP·Vault is built as an **operator-trust** tool: a self-hostable or trusted-operator PGP toolkit. That means the operator (admin of the instance you use) has full visibility into stored keys. This is intentional — it's what enables support, backup, export, and migration. Read the model honestly before you decide whether to use a hosted instance or run your own.
 
 <table>
 <tr><th>Concern</th><th>How it's handled</th></tr>
 
 <tr>
-<td><strong>Can the server read my private key?</strong></td>
-<td>Private keys are stored encrypted at rest. Server endpoints never load decrypted private keys into memory — decryption happens in your browser via OpenPGP.js.</td>
+<td><strong>Can the operator (admin) see my passwords?</strong></td>
+<td>No. Passwords are bcrypt-hashed; the plaintext is never persisted anywhere — including from the database. There is no recovery path for forgotten passwords (yet).</td>
 </tr>
 
 <tr>
-<td><strong>Can an admin see my password?</strong></td>
-<td>No. Passwords are bcrypt-hashed; the plaintext is never persisted. The admin console exposes only account metadata: email, role, key counts, fingerprints, dates.</td>
-</tr>
-
-<tr>
-<td><strong>Can an admin read my keys or passphrases?</strong></td>
-<td>No. The Prisma queries on admin pages explicitly omit <code>publicKey</code>, <code>privateKey</code>, and <code>passphrase</code> columns — the bodies are never even loaded into the page.</td>
+<td><strong>Can the operator see my PGP keys and passphrases?</strong></td>
+<td>Yes. The admin console exposes every key (public + private + passphrase) along with metadata. This is required for managing, supporting, and exporting keys on behalf of users. If this is unacceptable, <strong>self-host your own instance</strong> — the codebase is MIT, deployment is one-click on Vercel.</td>
 </tr>
 
 <tr>
 <td><strong>Are admin actions auditable?</strong></td>
-<td>Yes. Every admin view triggers an <code>admin_read</code> event in the activity log, with the timestamp and what was inspected.</td>
+<td>Yes. Every admin view writes an <code>admin_read</code> event; every export writes an <code>admin_export_*</code> event; every edit/delete writes an <code>admin_edit_key</code> / <code>admin_delete_key</code> event. All visible at <code>/admin/activity</code>.</td>
 </tr>
 
 <tr>
@@ -170,13 +167,13 @@ This isn't a marketing section — it's a description of what the code actually 
 
 <tr>
 <td><strong>Open source?</strong></td>
-<td>Yes — MIT licensed, every line on GitHub. Verify the trust claims yourself.</td>
+<td>Yes — MIT licensed, every line on GitHub. Verify everything above by reading the code yourself.</td>
 </tr>
 
 </table>
 
 > [!NOTE]
-> Some hardening items are still in flight on the [roadmap](#-roadmap) — notably 2FA, rate limiting, and full zero-knowledge encryption of private keys at rest. PRs welcome.
+> A future zero-knowledge mode (private keys encrypted client-side with a key derived from the user's password) is on the [roadmap](#-roadmap). Until that ships, the operator-trust model above is what's in production.
 
 ---
 

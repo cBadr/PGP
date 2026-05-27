@@ -59,7 +59,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <footer className="border-t border-white/5 py-4 text-center text-xs text-white/40">
         <span className="inline-flex items-center gap-1.5">
           <ShieldCheck size={12} className="text-emerald-400/80" />
-          OpenPGP toolkit · admin cannot read your secrets
+          OpenPGP toolkit · every operator action is audit-logged
         </span>
       </footer>
     </>

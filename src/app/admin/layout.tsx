@@ -58,7 +58,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <h2 className="text-sm uppercase tracking-widest text-white/50 inline-flex items-center gap-2">
               <ShieldCheck size={14} className="text-rose-300" /> Admin Console
             </h2>
-            <span className="badge badge-rose"><ShieldCheck size={12} /> Full visibility · plain-text mode</span>
+            <span className="badge badge-rose"><ShieldCheck size={12} /> Operator mode · full visibility · every read is logged</span>
           </div>
         </header>
         <main className="p-8 max-w-7xl">{children}</main>
