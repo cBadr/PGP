@@ -2,41 +2,26 @@ import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
 /**
- * Database URL strategy for Supabase / Neon / Vercel Postgres on serverless:
+ * Migrations vs. runtime:
  *
- *   DATABASE_URL  — used at RUNTIME by the pg driver adapter.
- *                   Should point at the TRANSACTION pooler (port 6543).
- *                   Transaction mode supports thousands of concurrent
- *                   short-lived connections, which is what Vercel
- *                   serverless functions actually need.
+ *   Runtime  (Vercel serverless) → uses DATABASE_URL via src/lib/prisma.ts.
+ *                                  Should be the TRANSACTION pooler (6543).
  *
- *   DIRECT_URL    — used by `prisma migrate` / `prisma db push`.
- *                   Should point at the SESSION pooler (port 5432) or
- *                   the direct connection. Migrations need prepared
- *                   statements, which transaction mode doesn't support.
+ *   Migrations (this config, used by `prisma migrate dev/deploy`)
+ *                                → prefer DIRECT_URL (session pooler 5432
+ *                                  or direct connection — supports
+ *                                  prepared statements). Falls back to
+ *                                  DATABASE_URL when DIRECT_URL is absent.
  *
- * If DIRECT_URL is missing, we fall back to DATABASE_URL — fine for local
- * dev against a direct/session connection, broken on Vercel + Supabase
- * with a transaction pooler URL.
+ * Note: `prisma generate` ALSO loads this file but doesn't connect to the
+ * database, so an empty url string is fine in that case — we don't throw
+ * here, we let `prisma migrate` itself error out with a clear message if
+ * the url is truly missing.
  */
-const migrationsUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
-
-if (!migrationsUrl) {
-  throw new Error(
-    [
-      "❌ Neither DIRECT_URL nor DATABASE_URL is set.",
-      "",
-      "  Vercel: Project → Settings → Environment Variables",
-      "          DATABASE_URL = Supabase TRANSACTION pooler URL (port 6543)",
-      "          DIRECT_URL   = Supabase SESSION pooler URL  (port 5432)",
-      "",
-      "  Local:  copy .env.example to .env and fill both.",
-    ].join("\n"),
-  );
-}
-
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: { path: "prisma/migrations" },
-  datasource: { url: migrationsUrl },
+  datasource: {
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL || "",
+  },
 });
